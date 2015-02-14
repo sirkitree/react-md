@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>React-md</title>
+	<script type="text/javascript" src="http://fb.me/react-0.8.0.js"></script>
+	<script type="text/javascript" src="http://fb.me/JSXTransformer-0.8.0.js"></script>
+	<script type="text/javascript" src="marked.js"></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<script type="text/jsx">
+	/*** @jsx React.DOM */
+	var App = React.createClass({
+		getInitialState: function () {
+			return {txt:'',id:0}
+		},
+		updateTxt: function (e) {
+			this.setState({txt:marked(e.target.value)});
+		},
+		render: function () {
+			return (
+				<div className="container-fluid">
+					<div className="row-fluid">
+						<div className="span6">
+							<textarea onChange={this.updateTxt}></textarea>
+						</div>
+						<div className="span6" dangerouslySetInnerHTML={{__html: this.state.txt}}></div>
+					</div>
+				</div>
+				)
+		}
+	});
+
+	React.renderComponent(
+		<App txt="this is the txt prop" />,
+		document.body)
+</script>
+
+</body>
+</html>
