@@ -2,8 +2,8 @@
 <html>
 <head>
 	<title>React-md</title>
-	<script type="text/javascript" src="http://fb.me/react-0.8.0.js"></script>
-	<script type="text/javascript" src="http://fb.me/JSXTransformer-0.8.0.js"></script>
+	<script type="text/javascript" src="http://fb.me/react-0.12.2.js"></script>
+	<script type="text/javascript" src="http://fb.me/JSXTransformer-0.12.2.js"></script>
 	<script type="text/javascript" src="marked.js"></script>
 	<link rel="stylesheet" type="text/css" href="bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
@@ -12,29 +12,43 @@
 <script type="text/jsx">
 	/*** @jsx React.DOM */
 	var App = React.createClass({
-		getInitialState: function () {
-			return {txt:'',id:0}
+		getInitialState: function(){
+			return {txt:''}
 		},
-		updateTxt: function (e) {
+
+		updateTxt: function(e){
 			this.setState({txt:marked(e.target.value)});
 		},
-		render: function () {
+
+		render: function(){
 			return (
 				<div className="container-fluid">
 					<div className="row-fluid">
-						<div className="span6">
-							<textarea onChange={this.updateTxt}></textarea>
-						</div>
-						<div className="span6" dangerouslySetInnerHTML={{__html: this.state.txt}}></div>
+						<Input onChange={this.updateTxt} />
+						<Output markedValue={this.state.txt} />
 					</div>
 				</div>
-				)
+			)
 		}
 	});
 
-	React.renderComponent(
-		<App txt="this is the txt prop" />,
-		document.body)
+	var Input = React.createClass({
+		render: function(){
+			return (
+				<div className="span6 input">
+					<textarea onChange={this.props.onChange}></textarea>
+				</div>
+			)
+		}
+	});
+
+	var Output = React.createClass({
+		render: function(){
+			return <div className="span6 output" dangerouslySetInnerHTML={{__html:this.props.markedValue}}></div>
+		}
+	});
+
+	React.render(<App />, document.body);
 </script>
 
 </body>
