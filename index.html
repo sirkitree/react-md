@@ -7,49 +7,68 @@
 	<script type="text/javascript" src="marked.js"></script>
 	<link rel="stylesheet" type="text/css" href="bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<script src="ace/ace.js" type="text/javascript" charset="utf-8"></script>
+
+	<script type="text/jsx">
+		/*** @jsx React.DOM */
+		var App = React.createClass({
+			getInitialState: function(){
+				return {txt:''}
+			},
+
+			updateTxt: function(value){
+				this.setState({txt:marked(value)});
+			},
+
+			componentDidMount: function() {
+				var editor = ace.edit('editor');
+				
+				// We do the update here because the element has changed.
+				editor.getSession().on('change', function(e) {
+					// 'this' is different here so we set with plain old js
+					document.getElementsByClassName('output')[0].innerHTML = marked(editor.getValue());
+				});
+				
+			},
+
+			render: function(){
+				return (
+					<div className="container-fluid">
+						<div className="row-fluid">
+							<Input />
+							<Output markedValue={this.state.txt} />
+						</div>
+					</div>
+				)
+			}
+		});
+
+		var Input = React.createClass({
+			componentDidMount: function() {
+				var editor = ace.edit('editor');
+				editor.getSession().setMode('ace/mode/markdown');
+				editor.setTheme('ace/theme/monokai');
+			},
+
+			render: function(){
+				return (
+					<div className="span6 input">
+						<div id="editor" onChange={this.props.onChange}># test</div>
+					</div>
+				)
+			}
+		});
+
+		var Output = React.createClass({
+			render: function(){
+				return <div className="span6 output" dangerouslySetInnerHTML={{__html:this.props.markedValue}}></div>
+			}
+		});
+
+		React.render(<App />, document.body);
+	</script>
 </head>
 <body>
-<script type="text/jsx">
-	/*** @jsx React.DOM */
-	var App = React.createClass({
-		getInitialState: function(){
-			return {txt:''}
-		},
-
-		updateTxt: function(e){
-			this.setState({txt:marked(e.target.value)});
-		},
-
-		render: function(){
-			return (
-				<div className="container-fluid">
-					<div className="row-fluid">
-						<Input onChange={this.updateTxt} />
-						<Output markedValue={this.state.txt} />
-					</div>
-				</div>
-			)
-		}
-	});
-
-	var Input = React.createClass({
-		render: function(){
-			return (
-				<div className="span6 input">
-					<textarea onChange={this.props.onChange}></textarea>
-				</div>
-			)
-		}
-	});
-
-	var Output = React.createClass({
-		render: function(){
-			return <div className="span6 output" dangerouslySetInnerHTML={{__html:this.props.markedValue}}></div>
-		}
-	});
-
-	React.render(<App />, document.body);
-</script>
-
 </body>
 </html>
