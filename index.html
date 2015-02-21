@@ -26,9 +26,8 @@
 				
 				// We do the update here because the element has changed.
 				editor.getSession().on('change', function(e) {
-					// 'this' is different here so we set with plain old js
-					document.getElementsByClassName('output')[0].innerHTML = marked(editor.getValue());
-				});
+					this.updateTxt(editor.getValue());
+				}.bind(this));
 				
 			},
 
